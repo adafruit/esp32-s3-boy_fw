@@ -16,7 +16,7 @@ set(requires
   "esp_timer"
   "esp_psram"
   "vfs"
-  "fatfs"
+  "squashfs"
   "nvs_flash"
   "esp_adc"
   "app_update"

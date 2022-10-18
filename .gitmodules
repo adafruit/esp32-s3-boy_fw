@@ -1,0 +1,6 @@
+[submodule "components/squashfs/lib/libsquash"]
+	path = components/squashfs/lib/libsquash
+	url = https://github.com/pmq20/libsquash
+[submodule "components/squashfs/lib/zlib"]
+	path = components/squashfs/lib/zlib
+	url = https://github.com/madler/zlib
