@@ -1,0 +1,42 @@
+name: Build CI
+
+on:
+  push:
+  pull_request:
+  release:
+    types: [published]
+  check_suite:
+    types: [rerequested]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-20.04
+
+    steps:
+    - name: Dump GitHub context
+      env:
+        GITHUB_CONTEXT: ${{ toJson(github) }}
+      run: echo "$GITHUB_CONTEXT"
+    - uses: actions/checkout@v3
+      with:
+        submodules: false
+        fetch-depth: 1
+    - uses: actions/checkout@v3
+      with:
+        repository: espressif/esp-idf
+        path: esp-idf
+        submodules: false
+        fetch-depth: 1
+    - name: esp-idf setup/install
+      run: esp-idf/install.sh
+    - name: build DOOM
+      run: |
+        . esp-idf/export.sh && cd fw/s3-boy-doom && idf.py set-target esp32c3 && idf.py build && cd build && esptool.py --chip esp32s3 merge_bin -t 0 --output s3-boy-doom-combined.bin `tail -n +2 flash_args`
+    - uses: actions/upload-artifact@v3
+      with:
+        name: s3-boy-doom-combined
+        path: fw/s3-boy-doom/build/s3-boy-doom-combined.bin
