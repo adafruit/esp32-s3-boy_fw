@@ -63,7 +63,7 @@
 #define      HW_LOG_LIST_BUF_MAX    1024
 
 #define _USE_HW_GPIO
-#define      HW_GPIO_MAX_CH         6
+#define      HW_GPIO_MAX_CH         7
 
 #define _USE_HW_LCD
 #define      HW_LCD_SWAP_RGB        1
@@ -71,7 +71,7 @@
 #define      HW_LCD_LOGO            1
 #define _USE_HW_ST7789
 #define      HW_LCD_WIDTH           240
-#define      HW_LCD_HEIGHT          240
+#define      HW_LCD_HEIGHT          135
 
 #define _USE_HW_PWM
 #define      HW_PWM_MAX_CH          1
@@ -90,11 +90,13 @@
 #define      HW_AUDIO_CMD_MAX_CH    4
 
 
+// Indices within gpio.c:gpio_tbl[]
 #define _PIN_GPIO_LCD_BLK           2
 #define _PIN_GPIO_LCD_DC            1
-#define _PIN_GPIO_LCD_CS           -1
+#define _PIN_GPIO_LCD_CS            0
 #define _PIN_GPIO_LCD_RST           3
 
+// Indices within button.c:button_port_tbl[]
 #define _BTN_LEFT                   0   
 #define _BTN_RIGHT                  1   
 #define _BTN_UP                     2   

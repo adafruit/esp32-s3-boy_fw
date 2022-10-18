@@ -232,7 +232,7 @@ void lcdSetBackLight(uint8_t value)
   }
   else
   {
-    gpioPinWrite(_PIN_DEF_BL_CTL, _DEF_LOW);
+    gpioPinWrite(_PIN_DEF_BL_CTL, _DEF_HIGH);
   }
 #endif
 }

@@ -28,8 +28,9 @@ void logEnable(void);
 void logDisable(void);
 bool logOpen(uint8_t ch, uint32_t baud);
 void logBoot(uint8_t enable);
+#if !_USE_LOG_PRINT
 void logPrintf(const char *fmt, ...);
-
+#endif
 #endif
 
 #ifdef __cplusplus

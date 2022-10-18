@@ -25,12 +25,13 @@ typedef struct
 
 static const gpio_tbl_t gpio_tbl[GPIO_MAX_CH] =
     {
-      {GPIO_NUM_15, _DEF_OUTPUT, _DEF_HIGH}, // 0. LCD CS      
-      {GPIO_NUM_16, _DEF_OUTPUT, _DEF_LOW }, // 1. LCD DC
-      {GPIO_NUM_4 , _DEF_OUTPUT, _DEF_LOW }, // 2. LCD BLK      
-      {GPIO_NUM_5 , _DEF_OUTPUT, _DEF_HIGH}, // 3. LCD RST
+      {GPIO_NUM_7 , _DEF_OUTPUT, _DEF_HIGH}, // 0. LCD CS
+      {GPIO_NUM_39, _DEF_OUTPUT, _DEF_LOW }, // 1. LCD DC
+      {GPIO_NUM_45, _DEF_OUTPUT, _DEF_LOW }, // 2. LCD BLK
+      {GPIO_NUM_40, _DEF_OUTPUT, _DEF_HIGH}, // 3. LCD RST
       {GPIO_NUM_38, _DEF_OUTPUT, _DEF_HIGH }, // 4. SPK MUTE
       {GPIO_NUM_17, _DEF_INPUT , _DEF_HIGH}, // 5. SDCARD CD
+      {GPIO_NUM_21, _DEF_OUTPUT, _DEF_HIGH}, // 6. LCD PWR
     };
 
 static uint8_t gpio_data[GPIO_MAX_CH];
@@ -109,10 +110,12 @@ bool gpioPinMode(uint8_t ch, uint8_t mode)
 
 void gpioPinWrite(uint8_t ch, uint8_t value)
 {
+  printf("gpioPinWrite %d := %d\n", ch, value);
   if (ch >= GPIO_MAX_CH)
   {
     return;
   }
+
 
   gpio_data[ch] = value;
   gpio_set_level(gpio_tbl[ch].pin, value);

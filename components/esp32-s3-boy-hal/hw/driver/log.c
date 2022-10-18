@@ -151,6 +151,7 @@ bool logBufPrintf(log_buf_t *p_log, char *p_data, uint32_t length)
   return true;
 }
 
+#if !_USE_LOG_PRINT
 void logPrintf(const char *fmt, ...)
 {
 #ifdef _USE_HW_RTOS
@@ -183,7 +184,7 @@ void logPrintf(const char *fmt, ...)
   unLock();
 #endif
 }
-
+#endif
 
 #ifdef _USE_HW_CLI
 void cliCmd(cli_args_t *args)

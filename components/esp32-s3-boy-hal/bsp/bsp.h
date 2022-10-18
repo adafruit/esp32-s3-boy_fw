@@ -35,7 +35,7 @@ extern "C" {
 #include "esp_partition.h"
 #include "esp_ota_ops.h"
 
-#if 0
+#if 1
 #define _USE_LOG_PRINT    1
 
 #if _USE_LOG_PRINT
@@ -43,10 +43,9 @@ extern "C" {
 #else
 #define logPrintf(fmt, ...)
 #endif
-#endif
-
+#else
 void logPrintf(const char *fmt, ...);
-
+#endif
 
 void bspInit(void);
 uint32_t bspGetCpuFreqMhz(void);

@@ -17,6 +17,7 @@
 #include "driver/gpio.h"
 
 
+#define _PIN_DEF_PWR    21
 #define _PIN_DEF_BLK    _PIN_GPIO_LCD_BLK
 #define _PIN_DEF_DC     _PIN_GPIO_LCD_DC
 #define _PIN_DEF_CS     _PIN_GPIO_LCD_CS
@@ -58,8 +59,8 @@ static void (*frameCallBack)(void) = NULL;
 volatile static bool  is_write_frame = false;
 static cb_data_t cb_data;
 
-const uint32_t colstart = 0;
-const uint32_t rowstart = 320 - HW_LCD_HEIGHT;
+const uint32_t colstart = 50;
+const uint32_t rowstart = 43;
 
 
 
@@ -141,8 +142,8 @@ bool st7789SpiInit(void)
   spi_bus_config_t buscfg = 
   {
     .miso_io_num = -1,
-    .mosi_io_num = GPIO_NUM_6,
-    .sclk_io_num = GPIO_NUM_7,
+    .mosi_io_num = GPIO_NUM_35,
+    .sclk_io_num = GPIO_NUM_36,
     .quadwp_io_num = -1,
     .quadhd_io_num = -1,
     .max_transfer_sz = 64*1024
@@ -151,7 +152,7 @@ bool st7789SpiInit(void)
   {
     .clock_speed_hz = 80*1000*1000,          // Clock out at 40 MHz
     .mode = 0,                               // SPI mode 0
-    .spics_io_num = GPIO_NUM_15,             // CS pin
+    .spics_io_num = GPIO_NUM_7,              // CS pin
     .queue_size = 16,                        // We want to be able to queue 8 transactions at a time
     .flags = SPI_DEVICE_HALFDUPLEX | SPI_DEVICE_NO_RETURN_RESULT, 
     .pre_cb = st7789PreCallback,             // Specify pre-transfer callback to handle D/C line
@@ -177,6 +178,12 @@ bool st7789SpiInit(void)
 
 bool st7789Reset(void)
 {
+  printf("st7789reset******\n");
+  printf("st7789reset******\n");
+  printf("st7789reset******\n");
+  printf("st7789reset******\n");
+  gpioPinWrite(_PIN_DEF_PWR, _DEF_HIGH);
+  delay(10);
   if (_PIN_DEF_BLK >= 0) gpioPinWrite(_PIN_DEF_BLK, _DEF_LOW);
   if (_PIN_DEF_DC >= 0)  gpioPinWrite(_PIN_DEF_DC,  _DEF_HIGH);
   if (_PIN_DEF_CS >= 0)  gpioPinWrite(_PIN_DEF_CS,  _DEF_HIGH);
@@ -187,8 +194,20 @@ bool st7789Reset(void)
   st7789InitRegs();
 
   st7789SetRotation(0);
-  st7789FillRect(0, 0, HW_LCD_WIDTH, HW_LCD_HEIGHT, black);
-  if (_PIN_DEF_BLK >= 0) gpioPinWrite(_PIN_DEF_BLK, _DEF_LOW);
+  st7789SetWindow(0, 0, HW_LCD_WIDTH, HW_LCD_HEIGHT);
+
+  st7789FillRect(0, 0, HW_LCD_WIDTH, HW_LCD_HEIGHT, white);
+  st7789FillRect(4, 4, HW_LCD_WIDTH-4, HW_LCD_HEIGHT-4, black);
+  st7789FillRect(8, 8, HW_LCD_WIDTH-8, HW_LCD_HEIGHT-8, white);
+  st7789FillRect(12, 12, HW_LCD_WIDTH-12, HW_LCD_HEIGHT-12, black);
+  st7789FillRect(16, 16, HW_LCD_WIDTH-16, HW_LCD_HEIGHT-16, white);
+
+  if (_PIN_DEF_BLK >= 0) gpioPinWrite(_PIN_DEF_BLK, _DEF_HIGH);
+
+  printf("st7789 done******\n");
+  printf("st7789 done******\n");
+  printf("st7789 done******\n");
+  printf("st7789 done******\n");
   
   return true;
 }
@@ -243,6 +262,9 @@ void writedata(uint8_t d)
 
 void st7789InitRegs(void)
 {
+
+  delay(10);
+
   writecommand(ST7789_SWRESET); //  1: Software reset, 0 args, w/delay
   delay(10);
 
@@ -252,7 +274,7 @@ void st7789InitRegs(void)
   writecommand(ST7789_INVON);  // 13: Don't invert display, no args, no delay
 
   writecommand(ST7789_MADCTL);  // 14: Memory access control (directions), 1 arg:
-  writedata(0x08);              //     row addr/col addr, bottom to top refresh
+  writedata(MADCTL_MX);
 
   writecommand(ST7789_COLMOD);  // 15: set color mode, 1 arg, no delay:
   writedata(0x05);              //     16-bit color
@@ -279,26 +301,6 @@ void st7789InitRegs(void)
 
 void st7789SetRotation(uint8_t mode)
 {
-  writecommand(ST7789_MADCTL);
-
-  switch (mode)
-  {
-   case 0:
-     writedata(MADCTL_MX | MADCTL_MY | MADCTL_RGB);
-     break;
-
-   case 1:
-     writedata(MADCTL_MY | MADCTL_MV | MADCTL_RGB);
-     break;
-
-  case 2:
-    writedata(MADCTL_RGB);
-    break;
-
-   case 3:
-     writedata(MADCTL_MX | MADCTL_MV | MADCTL_RGB);
-     break;
-  }
 }
 
 void st7789SetWindow(int32_t x0, int32_t y0, int32_t x1, int32_t y1)

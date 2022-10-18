@@ -120,7 +120,7 @@ void audioThread(void *argument)
   audio_cmd_t *p_cmd;
 
 
-  logPrintf("[__] audioThread %d\n", ch);
+  logPrintf("[__] audioThread %d\n", (int)ch);
 
   while(1)
   {

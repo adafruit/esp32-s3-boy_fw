@@ -40,6 +40,7 @@ bool adcInit(void)
 {
   esp_err_t err;
 
+  printf("%s:%d\n", __FILE__, __LINE__);
   adc_oneshot_unit_init_cfg_t init_config = {
     .unit_id = ADC_UNIT_1,
   };
@@ -49,23 +50,29 @@ bool adcInit(void)
   };  
 
   mutex_lock = xSemaphoreCreateMutex();
+  printf("%s:%d\n", __FILE__, __LINE__);
 
   err = adc_oneshot_new_unit(&init_config, &adc_h);
+  printf("%s:%d\n", __FILE__, __LINE__);
   logPrintf("[%s] adc_oneshot_new_unit()\n", err == ESP_OK ? "OK" : "NG");
   if (err != ESP_OK) return false;
 
   err = adc_oneshot_config_channel(adc_h, ADC_CHANNEL_0, &config);
+  printf("%s:%d\n", __FILE__, __LINE__);
   logPrintf("[%s] adc_oneshot_config_channel()\n", err == ESP_OK ? "OK" : "NG");
   if (err != ESP_OK) return false;
 
   is_cali = adcCaliInit(ADC_UNIT_1, ADC_ATTEN_DB_11, &adc_cali_h);
+  printf("%s:%d\n", __FILE__, __LINE__);
 
 
   is_init = true;
+  printf("%s:%d\n", __FILE__, __LINE__);
 
 #ifdef _USE_HW_CLI
   cliAdd("adc", cliAdc);
 #endif
+  printf("%s:%d\n", __FILE__, __LINE__);
   return true;
 }
 

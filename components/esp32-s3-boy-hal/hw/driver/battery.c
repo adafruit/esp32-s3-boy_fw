@@ -50,6 +50,7 @@ bool batteryInit(void)
 {
   bool ret = true;
 
+#if 0
   
   mutex_lock = xSemaphoreCreateMutex();
 
@@ -63,6 +64,7 @@ bool batteryInit(void)
     logPrintf("[NG] batteryThread()\n");   
   }
 
+#endif
   is_init = true;
 
 

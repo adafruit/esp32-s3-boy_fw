@@ -36,6 +36,7 @@ static void i2sThread(void *args);
 static bool is_init = false;
 static bool is_started = false;
 
+#if 0
 static i2s_chan_handle_t i2s_chan;  // I2S tx channel handler
 static i2s_chan_config_t i2s_chan_cfg = I2S_CHANNEL_DEFAULT_CONFIG(I2S_NUM_AUTO, I2S_ROLE_MASTER);
 static i2s_std_config_t  i2s_std_cfg = {
@@ -54,7 +55,7 @@ static i2s_std_config_t  i2s_std_cfg = {
             },
         },
     };
-
+#endif
 
 
 
@@ -65,7 +66,7 @@ bool i2sInit(void)
 
   mixerInit();
 
-
+#if 0
   err = i2s_new_channel(&i2s_chan_cfg, &i2s_chan, NULL);
   logPrintf("[%s] i2s_new_channel()\n", err == ESP_OK ? "OK":"NG");
   if (err != ESP_OK) return false;
@@ -77,7 +78,7 @@ bool i2sInit(void)
   err = i2s_channel_enable(i2s_chan);
   logPrintf("[%s] i2s_channel_enable()\n", err == ESP_OK ? "OK":"NG");
   if (err != ESP_OK) return false;
-
+#endif
 
   if (xTaskCreate(i2sThread, "i2sThread", _HW_DEF_RTOS_THREAD_MEM_I2S, NULL, _HW_DEF_RTOS_THREAD_PRI_I2S, NULL) != pdPASS)
   {
@@ -105,11 +106,13 @@ void i2sThread(void *args)
     {
       mixerRead(send_frame, I2S_MAX_FRAME_LEN);
 
+#if 0
       if (i2s_channel_write(i2s_chan, send_frame, I2S_MAX_FRAME_LEN * 2, &w_bytes, 1000) != ESP_OK)
       {
         logPrintf("i2s_channel_write fail\n");
       } 
       is_sent = true;
+#endif
     }
     else
     {
@@ -118,7 +121,9 @@ void i2sThread(void *args)
         is_sent = false;
         memset(send_frame, 0, I2S_MAX_FRAME_LEN * 2);
       }
+#if 0
       i2s_channel_write(i2s_chan, send_frame, I2S_MAX_FRAME_LEN * 2, &w_bytes, 1000);
+#endif
     }
     delay(2);    
   }
@@ -166,6 +171,7 @@ void i2sSetSampleRate(uint32_t sample_rate)
 {
   esp_err_t err;
 
+#if 0
   i2s_channel_disable(i2s_chan);
 
   i2s_std_cfg.clk_cfg.sample_rate_hz = sample_rate;
@@ -173,6 +179,7 @@ void i2sSetSampleRate(uint32_t sample_rate)
   logPrintf("[%s] i2s_channel_reconfig_std_clock()\n", err == ESP_OK ? "OK":"NG");
 
    i2s_channel_enable(i2s_chan);
+#endif
 }
 
 // https://m.blog.naver.com/PostView.nhn?blogId=hojoon108&logNo=80145019745&proxyReferer=https:%2F%2Fwww.google.com%2F

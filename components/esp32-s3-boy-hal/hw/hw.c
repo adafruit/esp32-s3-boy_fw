@@ -42,31 +42,45 @@ bool hwInit(void)
 
   nvsInit();
   adcInit();
+  printf("%s:%d\n", __FILE__, __LINE__);
   buttonInit();
+  printf("%s:%d\n", __FILE__, __LINE__);
 
   batteryInit();
+  printf("%s:%d\n", __FILE__, __LINE__);
   i2sInit();
+  printf("%s:%d\n", __FILE__, __LINE__);
   audioInit();
+  printf("%s:%d\n", __FILE__, __LINE__);
   buzzerInit();
+  printf("%s:%d\n", __FILE__, __LINE__);
   
   lcdInit();
+  printf("%s:%d\n", __FILE__, __LINE__);
   sdInit();
+  printf("%s:%d\n", __FILE__, __LINE__);
   fatfsInit();
+  printf("%s:%d\n", __FILE__, __LINE__);
   ymodemInit();
+  printf("%s:%d\n", __FILE__, __LINE__);
 
 
   esp_partition_iterator_t it;
 
   it = esp_partition_find(ESP_PARTITION_TYPE_APP, ESP_PARTITION_SUBTYPE_ANY, "launcher");
+  printf("%s:%d\n", __FILE__, __LINE__);
   if (it != NULL)
   {
+  printf("%s:%d\n", __FILE__, __LINE__);
     const esp_partition_t *part = esp_partition_get(it);
 
     if (part != esp_ota_get_running_partition())
     {
+  printf("%s:%d\n", __FILE__, __LINE__);
       esp_ota_set_boot_partition(part);
     }
   }
+  printf("%s:%d\n", __FILE__, __LINE__);
 
   return true;
 }
@@ -89,13 +103,13 @@ void bootMsg(void)
 
   uint32_t flash_size = 0;
   esp_flash_get_size(NULL, &flash_size);
-  logPrintf("SPI FLASH : %uMB %s flash\n", flash_size / (1024 * 1024),
+  logPrintf("SPI FLASH : %luMB %s flash\n", flash_size / (1024 * 1024),
           (chip_info.features & CHIP_FEATURE_EMB_FLASH) ? "embedded" : "external");
 
 
   logPrintf("SPI PSRAM : %dMB\n", esp_psram_get_size()/1024/1024);
 
   logPrintf("Free heap : %ld KB\n", esp_get_free_heap_size()/1024);
-  logPrintf("Free Heapi: %d KB\n", esp_get_free_internal_heap_size()/1024);
+  logPrintf("Free Heapi: %ld KB\n", esp_get_free_internal_heap_size()/1024);
   logPrintf("CPU Freq  : %lu Mhz\n", bspGetCpuFreqMhz());
 }
