@@ -3,10 +3,6 @@ idf_component_register(
         "squashfs.c"
         "lib/zlib/adler32.c"
         "lib/zlib/crc32.c"
-        "lib/zlib/gzclose.c"
-        "lib/zlib/gzlib.c"
-        "lib/zlib/gzread.c"
-        "lib/zlib/gzwrite.c"
         "lib/zlib/infback.c"
         "lib/zlib/inffast.c"
         "lib/zlib/inflate.c"
@@ -17,14 +13,12 @@ idf_component_register(
         "lib/libsquash/src/cache.c"
         "lib/libsquash/src/decompress.c"
         "lib/libsquash/src/dir.c"
-        "lib/libsquash/src/dirent.c"
         "lib/libsquash/src/extract.c"
         "lib/libsquash/src/fd.c"
         "lib/libsquash/src/file.c"
         "lib/libsquash/src/fs.c"
         "lib/libsquash/src/hash.c"
         "lib/libsquash/src/mutex.c"
-        "lib/libsquash/src/nonstd-makedev.c"
         "lib/libsquash/src/nonstd-stat.c"
         "lib/libsquash/src/private.c"
         "lib/libsquash/src/readlink.c"
@@ -34,6 +28,7 @@ idf_component_register(
         "lib/libsquash/src/table.c"
         "lib/libsquash/src/traverse.c"
         "lib/libsquash/src/util.c"
+        "libsquash_dirent.c"
     INCLUDE_DIRS
         "include"
     PRIV_INCLUDE_DIRS
@@ -42,3 +37,7 @@ idf_component_register(
     REQUIRES
         "vfs"
 )
+
+set_source_files_properties(lib/libsquash/src/dirent.c
+    PROPERTIES COMPILE_FLAGS -D__linux__)
+

@@ -1,3 +1,4 @@
+#include <unistd.h>
 #include <stdio.h>
 #include <sys/types.h>
 #include <dirent.h>
@@ -51,15 +52,21 @@ static const uint8_t enclose_io_memfs[4096] = { 104
 void app_main(void)
 {
     squash_mount_image("/data", enclose_io_memfs);
-    DIR *d = opendir("/data");
-    if(!dir) {
-        perror("opendir");
-        abort();
+    printf("mounted image");
+    while(1) {
+        DIR *d = opendir("/data");
+        printf("opendir() -> %p\n", d);
+        if(!d) {
+            perror("opendir");
+            abort();
+        }
+        for(struct dirent *ent; (ent = readdir(d)) != NULL;) {
+            printf("readdir() -> %p\n", ent);
+            printf("[%2d] %s\n", ent->d_type, ent->d_name);
+        }
+        printf("readdir() -> %p\n", NULL);
+        closedir(d);
+        printf("Done!\n");
+        sleep(1);
     }
-    struct dirent *ent;
-    for(struct dirent *ent; ent = readdir(d);) {
-        printf("%%s\n", ent->type, ent->name
-    }
-    closedir(d);
-    print("Done!\n");
 }
