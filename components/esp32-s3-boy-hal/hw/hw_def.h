@@ -95,6 +95,7 @@
 #define _PIN_GPIO_LCD_DC            1
 #define _PIN_GPIO_LCD_CS            0
 #define _PIN_GPIO_LCD_RST           3
+#define _PIN_GPIO_LCD_PWR           6
 
 // Indices within button.c:button_port_tbl[]
 #define _BTN_LEFT                   0   

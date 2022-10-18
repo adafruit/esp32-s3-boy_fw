@@ -110,7 +110,6 @@ bool gpioPinMode(uint8_t ch, uint8_t mode)
 
 void gpioPinWrite(uint8_t ch, uint8_t value)
 {
-  printf("gpioPinWrite %d := %d\n", ch, value);
   if (ch >= GPIO_MAX_CH)
   {
     return;

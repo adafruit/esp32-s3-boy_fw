@@ -17,7 +17,7 @@
 #include "driver/gpio.h"
 
 
-#define _PIN_DEF_PWR    21
+#define _PIN_DEF_PWR    _PIN_GPIO_LCD_PWR
 #define _PIN_DEF_BLK    _PIN_GPIO_LCD_BLK
 #define _PIN_DEF_DC     _PIN_GPIO_LCD_DC
 #define _PIN_DEF_CS     _PIN_GPIO_LCD_CS
@@ -44,6 +44,7 @@ typedef struct
 
 static void writecommand(uint8_t c);
 static void writedata(uint8_t d);
+static void writedata16(uint16_t d);
 static void st7789InitRegs(void);
 static void st7789SetRotation(uint8_t m);
 static bool st7789Reset(void);
@@ -59,8 +60,8 @@ static void (*frameCallBack)(void) = NULL;
 volatile static bool  is_write_frame = false;
 static cb_data_t cb_data;
 
-const uint32_t colstart = 50;
-const uint32_t rowstart = 43;
+const uint32_t colstart = 40;
+const uint32_t rowstart = 53;
 
 
 
@@ -178,10 +179,6 @@ bool st7789SpiInit(void)
 
 bool st7789Reset(void)
 {
-  printf("st7789reset******\n");
-  printf("st7789reset******\n");
-  printf("st7789reset******\n");
-  printf("st7789reset******\n");
   gpioPinWrite(_PIN_DEF_PWR, _DEF_HIGH);
   delay(10);
   if (_PIN_DEF_BLK >= 0) gpioPinWrite(_PIN_DEF_BLK, _DEF_LOW);
@@ -194,21 +191,11 @@ bool st7789Reset(void)
   st7789InitRegs();
 
   st7789SetRotation(0);
-  st7789SetWindow(0, 0, HW_LCD_WIDTH, HW_LCD_HEIGHT);
 
-  st7789FillRect(0, 0, HW_LCD_WIDTH, HW_LCD_HEIGHT, white);
-  st7789FillRect(4, 4, HW_LCD_WIDTH-4, HW_LCD_HEIGHT-4, black);
-  st7789FillRect(8, 8, HW_LCD_WIDTH-8, HW_LCD_HEIGHT-8, white);
-  st7789FillRect(12, 12, HW_LCD_WIDTH-12, HW_LCD_HEIGHT-12, black);
-  st7789FillRect(16, 16, HW_LCD_WIDTH-16, HW_LCD_HEIGHT-16, white);
+  st7789FillRect(0, 0, HW_LCD_WIDTH, HW_LCD_HEIGHT, black);
 
   if (_PIN_DEF_BLK >= 0) gpioPinWrite(_PIN_DEF_BLK, _DEF_HIGH);
 
-  printf("st7789 done******\n");
-  printf("st7789 done******\n");
-  printf("st7789 done******\n");
-  printf("st7789 done******\n");
-  
   return true;
 }
 
@@ -260,6 +247,27 @@ void writedata(uint8_t d)
   }
 }
 
+void writedata16(uint16_t d)
+{
+  esp_err_t ret;
+  spi_transaction_t t;
+  uint8_t buf[2];
+  buf[0] = d >> 8;
+  buf[1] = d & 0xff;
+  
+  memset(&t, 0, sizeof(t));     // Zero out the transaction
+  t.length = 16;                // Command is 8 bits
+  t.tx_buffer = &buf;           // The data is in big endian format
+  cb_data.dc = 1;
+  cb_data.q_max = 1;
+  t.user = (void*)&cb_data;     // D/C needs to be set to 0
+  ret = spi_device_polling_transmit(spi_ch, &t);  //Transmit!  
+  if (ret != ESP_OK)
+  {
+    logPrintf("writedata fail\n");
+  }
+}
+
 void st7789InitRegs(void)
 {
 
@@ -274,7 +282,8 @@ void st7789InitRegs(void)
   writecommand(ST7789_INVON);  // 13: Don't invert display, no args, no delay
 
   writecommand(ST7789_MADCTL);  // 14: Memory access control (directions), 1 arg:
-  writedata(MADCTL_MX);
+  writedata(MADCTL_MX | MADCTL_MV);
+  writedata(0);
 
   writecommand(ST7789_COLMOD);  // 15: set color mode, 1 arg, no delay:
   writedata(0x05);              //     16-bit color
@@ -306,16 +315,12 @@ void st7789SetRotation(uint8_t mode)
 void st7789SetWindow(int32_t x0, int32_t y0, int32_t x1, int32_t y1)
 {
   writecommand(ST7789_CASET); // Column addr set
-  writedata(0x00);
-  writedata(x0+colstart);     // XSTART
-  writedata(0x00);
-  writedata(x1+colstart);     // XEND
+  writedata16(x0+colstart);     // XSTART
+  writedata16(x1+colstart);     // XEND
 
   writecommand(ST7789_RASET); // Row addr set
-  writedata(0x00);
-  writedata(y0+rowstart);     // YSTART
-  writedata(0x00);
-  writedata(y1+rowstart);     // YEND
+  writedata16(y0+rowstart);     // YSTART
+  writedata16(y1+rowstart);     // YEND
 
   writecommand(ST7789_RAMWR); // write to RAM
 }
