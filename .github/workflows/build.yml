@@ -23,13 +23,7 @@ jobs:
       run: echo "$GITHUB_CONTEXT"
     - uses: actions/checkout@v3
       with:
-        submodules: false
-        fetch-depth: 1
-    - uses: actions/checkout@v3
-      with:
-        repository: espressif/esp-idf
-        path: esp-idf
-        submodules: false
+        submodules: true
         fetch-depth: 1
     - name: esp-idf setup/install
       run: esp-idf/install.sh
