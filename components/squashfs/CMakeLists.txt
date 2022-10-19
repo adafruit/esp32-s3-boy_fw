@@ -14,9 +14,8 @@ idf_component_register(
         "lib/libsquash/src/decompress.c"
         "lib/libsquash/src/dir.c"
         "lib/libsquash/src/extract.c"
-        "lib/libsquash/src/fd.c"
-        "lib/libsquash/src/file.c"
         "lib/libsquash/src/fs.c"
+        "lib/libsquash/src/file.c"
         "lib/libsquash/src/hash.c"
         "lib/libsquash/src/mutex.c"
         "lib/libsquash/src/nonstd-stat.c"
@@ -29,6 +28,7 @@ idf_component_register(
         "lib/libsquash/src/traverse.c"
         "lib/libsquash/src/util.c"
         "libsquash_dirent.c"
+        "libsquash_fd.c"
     INCLUDE_DIRS
         "include"
     PRIV_INCLUDE_DIRS

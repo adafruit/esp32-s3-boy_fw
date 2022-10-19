@@ -94,22 +94,18 @@ static int squash_fs_closedir(DIR *pdir) {
 
 static DIR *squash_fs_opendir(const char *name) {
     _lock_acquire(&lock);
-    printf("squash_fs_opendir %s\n", name);
-    DIR *res = (DIR*)squash_opendir(&fs, name);
-    if (!res) { RETURN_PTR(); }
+    SQUASH_DIR *res = squash_opendir(&fs, name);
+    if (!res) { RETURN_ARG(NULL); }
 
     SQ_DIR_WRAP *wrap_dir = malloc(sizeof(SQ_DIR_WRAP));
     wrap_dir->real_dir = res;
-    printf("squash_fs_res=%p / %p\n", wrap_dir, res);
     RETURN_ARG((DIR*)wrap_dir);
 }
 
 static struct dirent *squash_fs_readdir(DIR *pdir) {
     _lock_acquire(&lock);
-    printf("squash_fs_readdir %p\n", pdir);
     SQ_DIR_WRAP *wrap_dir = (SQ_DIR_WRAP*) pdir;
     struct dirent *res = squash_readdir(wrap_dir->real_dir);
-    printf("squash_fs_res=%p\n", res);
     RETURN_PTR();
 }
 
@@ -149,6 +145,7 @@ int dup(int unused) {
     MUTEX_LOCK(&squash_global_mutex);
     size_t i;
     for(i=3; i<squash_global_fdtable.nr; i++) {
+        printf("fds[%2zd] = %p\n", i, squash_global_fdtable.fds[i]);
         if(!squash_global_fdtable.fds[i]) { break; }
     }
     MUTEX_UNLOCK(&squash_global_mutex);

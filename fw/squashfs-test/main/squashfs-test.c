@@ -55,18 +55,15 @@ void app_main(void)
     printf("mounted image");
     while(1) {
         DIR *d = opendir("/data");
-        printf("opendir() -> %p\n", d);
         if(!d) {
             perror("opendir");
             abort();
         }
         for(struct dirent *ent; (ent = readdir(d)) != NULL;) {
-            printf("readdir() -> %p\n", ent);
             printf("[%2d] %s\n", ent->d_type, ent->d_name);
         }
-        printf("readdir() -> %p\n", NULL);
         closedir(d);
         printf("Done!\n");
-        sleep(1);
+        usleep(10*1000);
     }
 }
