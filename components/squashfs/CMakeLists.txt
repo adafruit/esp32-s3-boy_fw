@@ -38,6 +38,6 @@ idf_component_register(
         "vfs"
 )
 
-set_source_files_properties(lib/libsquash/src/dirent.c
-    PROPERTIES COMPILE_FLAGS -D__linux__)
+set_source_files_properties(lib/libsquash/src/dir.c
+    PROPERTIES COMPILE_FLAGS -Wno-stringop-truncation)
 
