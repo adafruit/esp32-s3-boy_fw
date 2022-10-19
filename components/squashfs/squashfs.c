@@ -35,7 +35,7 @@ dev_t sqfs_makedev(unsigned int maj, unsigned int min) {
 static int squash_fs_open(const char *path, int flags, int mode) {
     _lock_acquire(&lock);
 
-    if((mode & O_ACCMODE) != O_RDONLY) { RETURN_ERROR(EROFS); }
+    if((flags & O_ACCMODE) != O_RDONLY) { RETURN_ERROR(EROFS); }
 
     int res = squash_open(&fs, path);
     RETURN_RES();
