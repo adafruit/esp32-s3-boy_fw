@@ -49,21 +49,46 @@ static const uint8_t enclose_io_memfs[4096] = { 104
 ,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 };
 
+void show(const char *fn) {
+    FILE *f = fopen(fn, "rb");
+    if(!f) { perror("fopen"); return; }
+    int c;
+    while((c = fgetc(f)) != EOF) {
+        putchar(c);
+    }
+    fclose(f);
+}
+void walk(const char *dir) {
+    char buf[1024];
+    DIR *d = opendir(dir);
+    if(!d) {
+        perror("opendir");
+        return;
+    }
+    for(struct dirent *ent; (ent = readdir(d)) != NULL;) {
+        snprintf(buf, sizeof(buf), "%s/%s", dir, ent->d_name);
+        printf("[%2d] %s\n", ent->d_type, buf);
+        if(ent->d_type == DT_REG) {
+            show(buf);
+        }
+        if(ent->d_type == DT_DIR) {
+            walk(buf);
+            printf("\n");
+        }
+    }
+    closedir(d);
+
+}
+
 void app_main(void)
 {
     squash_mount_image("/data", enclose_io_memfs);
     printf("mounted image");
     while(1) {
-        DIR *d = opendir("/data");
-        if(!d) {
-            perror("opendir");
-            abort();
-        }
-        for(struct dirent *ent; (ent = readdir(d)) != NULL;) {
-            printf("[%2d] %s\n", ent->d_type, ent->d_name);
-        }
-        closedir(d);
+        walk("/data");
         printf("Done!\n");
+        usleep(10*1000);
+        printf("also Done!\n");
         usleep(10*1000);
     }
 }
