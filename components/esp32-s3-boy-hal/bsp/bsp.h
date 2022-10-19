@@ -30,7 +30,6 @@ extern "C" {
 #include "hal/cache_hal.h"
 
 #include "esp_vfs.h"
-#include "esp_vfs_fat.h"
 #include "nvs_flash.h"
 #include "esp_partition.h"
 #include "esp_ota_ops.h"

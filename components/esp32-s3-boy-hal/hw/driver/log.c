@@ -46,7 +46,6 @@ static bool is_open = false;
 static uint8_t  log_ch = LOG_CH;
 static uint32_t log_baud = 57600;
 
-static char print_buf[256];
 
 #ifdef _USE_HW_RTOS
 static SemaphoreHandle_t mutex_lock;
@@ -152,6 +151,7 @@ bool logBufPrintf(log_buf_t *p_log, char *p_data, uint32_t length)
 }
 
 #if !_USE_LOG_PRINT
+static char print_buf[256];
 void logPrintf(const char *fmt, ...)
 {
 #ifdef _USE_HW_RTOS

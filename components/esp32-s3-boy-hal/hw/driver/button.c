@@ -10,7 +10,7 @@
 
 #include "button.h"
 #include "cli.h"
-
+#include "driver/gpio.h"
 
 
 #ifdef _USE_HW_BUTTON

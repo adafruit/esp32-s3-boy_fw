@@ -1,13 +1,11 @@
 #include "fatfs.h"
 #include "cli.h"
 #include "sd.h"
-
+#include "spi_flash_mmap.h"
 
 #ifdef _USE_HW_FATFS
 #include "esp_vfs.h"
-#include "esp_vfs_fat.h"
-#include "diskio_impl.h"
-#include "diskio_sdmmc.h"
+#include "squashfs.h"
 
 
 #define lock()      xSemaphoreTake(mutex_lock, portMAX_DELAY);
@@ -19,47 +17,36 @@ static void cliFatfs(cli_args_t *args);
 #endif
 
 static bool fatfsMount(void);
-static bool fatfsUnMount(void);
-static void fatfsSdEvent(sd_event_t);
+static bool fatfsUnMount(void) __attribute__((unused));
 
 
 static bool is_init = false;
 static bool is_mounted = false;
 
 static SemaphoreHandle_t mutex_lock;
-static char *base_path = "/sdcard";
-static BYTE drive_number = FF_DRV_NOT_USED;
-static sdmmc_card_t *p_sdcard = NULL;
-static esp_vfs_fat_sdmmc_mount_config_t fat_mount_config = 
-    {
-      .format_if_mount_failed = false,
-      .max_files = 5,
-      .allocation_unit_size = 16 * 1024
-    };
+const static char *base_path = "/sdcard";
 
-
-
-
+const static esp_partition_t *data_partition;
+const static void *data_ptr;
+static spi_flash_mmap_handle_t handle;
 
 bool fatfsInit(void)
 {
   mutex_lock = xSemaphoreCreateMutex();
+ 
+  data_partition = esp_partition_find_first(0x40, 0x1, NULL);
+  if (!data_partition) return false;
 
-
-  ff_diskio_get_drive(&drive_number);
-  logPrintf("[%s] ff_diskio_get_drive()\n", drive_number != FF_DRV_NOT_USED ? "OK" : "NG");
-  if (drive_number == FF_DRV_NOT_USED) 
-  {
-    return false;
+  esp_err_t err = esp_partition_mmap(data_partition, 0, data_partition->size, SPI_FLASH_MMAP_DATA, &data_ptr, &handle);
+  if (err != ESP_OK) {
+      return false;
   }
-
-  sdAddEventFunc(fatfsSdEvent);
-
-#ifdef _USE_HW_CLI
-  cliAdd("fatfs", cliFatfs);
-#endif
-
   is_init = true;
+
+  fatfsMount();
+  #ifdef _USE_HW_CLI
+  cliAdd("fatfs", cliFatfs);
+  #endif
 
   return true;
 }
@@ -86,117 +73,18 @@ bool fatfsUnLock(void)
   return true;
 }
 
-void fatfsSdEvent(sd_event_t sd_event)
-{
-  switch(sd_event.sd_state)
-  {
-    case SDCARD_CONNECTED:
-      p_sdcard = sd_event.sd_arg;
-      lock();
-      fatfsMount();
-      unLock();
-      break;
-  
-    case SDCARD_DISCONNECTED:
-      p_sdcard = sd_event.sd_arg;
-      lock();
-      fatfsUnMount();
-      unLock();
-      break;
-
-    case SDCARD_ERROR:
-      p_sdcard = sd_event.sd_arg;
-      lock();
-      fatfsUnMount();
-      unLock();
-      break;
-
-    default:
-      break;
-  }
-}
-
 bool fatfsMount(void)
 {
-  bool ret = true;
-  FATFS* fs = NULL;
-  esp_err_t err;
-
-  if (p_sdcard == NULL) return false;
-  if (drive_number == FF_DRV_NOT_USED) return false; 
-  if (is_mounted == true)
-  {
-    fatfsUnMount();
-  }
-    
-
-  ff_diskio_register_sdmmc(drive_number, p_sdcard);
-  ff_sdmmc_set_disk_status_check(drive_number, fat_mount_config.disk_status_check_enable);
-  logPrintf("[__] fatfsMount : using pdrv=%i\n", drive_number);
-
-  char drv[3] = {(char)('0' + drive_number), ':', 0};
-
-  do
-  {
-    // connect FATFS to VFS
-    err = esp_vfs_fat_register(base_path, drv, fat_mount_config.max_files, &fs);
-    if (err != ESP_OK) 
-    {
-      logPrintf("[NG] esp_vfs_fat_register()\n");
-      ret = false;
-      break;
-    }
-
-    FRESULT res = f_mount(fs, drv, 1);
-    if (res == FR_OK)
-    {
-      logPrintf("[OK] f_mount()\n");
-    }
-    else
-    {
-      ret = false;
-      logPrintf("[NG] f_mount()\n");
-      break;
-    }
-  } while(0);
-
-
-  if (ret == false)
-  {
-    if (fs) 
-    {
-      f_mount(NULL, drv, 0);
-    }
-    esp_vfs_fat_unregister_path(base_path);
-    ff_diskio_unregister(drive_number);
-    logPrintf("[NG] fatfsUnMount()\n");
-  }
-  else
-  {
-    is_mounted = true;
-    logPrintf("[OK] fatfsMount()\n");
-  }
-
-  return ret;
+  if (!is_init) { return false; }
+  if (is_mounted) { return true; }
+  squash_mount_image(base_path, data_ptr);
+  is_mounted = true;
+  return true;
 }
 
 bool fatfsUnMount(void)
 {
-  bool ret = true;
-
-  if (is_mounted == false) return false;
-  is_mounted = false;
-
-  // unmount
-  char drv[3] = {(char)('0' + drive_number), ':', 0};
-  f_mount(0, drv, 0);
-  // release SD driver
-  ff_diskio_unregister(drive_number);
-  esp_vfs_fat_unregister_path(base_path);
-
-  logPrintf("[OK] fatfsUnMount()\n");
-
-  return ret;
+  return false;
 }
 
 

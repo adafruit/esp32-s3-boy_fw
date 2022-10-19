@@ -9,6 +9,8 @@
 #include "lcd.h"
 #include "cli.h"
 
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
 
 #ifdef _USE_HW_LCD
 #include "gpio.h"
@@ -488,6 +490,8 @@ bool lcdDrawAvailable(void)
 
 bool lcdRequestDraw(void)
 {
+  taskYIELD();
+
   if (is_init != true)
   {
     return false;

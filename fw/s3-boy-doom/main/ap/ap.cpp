@@ -96,7 +96,7 @@ void emulThread(void *args)
   
   logo = lcdCreateImage(&doom_logo, 0, 0, 0, 0);
   lcdDrawImage(&logo, 0, 0);
-  lcdPrintfResize(8, 200, white, 32, "LOADING...");
+  lcdPrintfResize(8, 160, white, 32, "LOADING...");
   lcdUpdateDraw();
 
   D_DoomMain();

@@ -30,7 +30,7 @@ typedef struct
 #ifdef _USE_HW_CLI
 static void cliBattery(cli_args_t *args);
 #endif
-static void batteryThread(void *args);
+static void batteryThread(void *args) __attribute((unused));
 
 
 static SemaphoreHandle_t mutex_lock;

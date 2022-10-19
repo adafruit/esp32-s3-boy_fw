@@ -17,6 +17,8 @@
 //
 
 
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
 
 
 #include <ctype.h>
@@ -345,6 +347,8 @@ int W_LumpLength(lumpindex_t lump)
 //
 void W_ReadLump(lumpindex_t lump, void *dest)
 {
+    taskYIELD();
+
     int c;
     lumpinfo_t *l;
 

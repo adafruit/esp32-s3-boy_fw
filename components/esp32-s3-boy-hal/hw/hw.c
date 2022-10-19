@@ -42,7 +42,6 @@ bool hwInit(void)
 
   nvsInit();
   adcInit();
-  printf("%s:%d\n", __FILE__, __LINE__);
   buttonInit();
   printf("%s:%d\n", __FILE__, __LINE__);
 
@@ -57,7 +56,7 @@ bool hwInit(void)
   
   lcdInit();
   printf("%s:%d\n", __FILE__, __LINE__);
-  sdInit();
+  // sdInit();
   printf("%s:%d\n", __FILE__, __LINE__);
   fatfsInit();
   printf("%s:%d\n", __FILE__, __LINE__);

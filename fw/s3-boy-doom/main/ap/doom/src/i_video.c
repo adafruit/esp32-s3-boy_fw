@@ -817,20 +817,22 @@ static void drawScreenNormal(void)
     return;
   }
 
-  int x_offset;
-  int y_offset;
+  _Static_assert(HW_LCD_WIDTH == 240);
+  const int x_offset = 0;
 
-  x_offset = (240 - 240)/2;
-  y_offset = (240 - 180)/2;
+#if HW_LCD_HEIGHT < 180
+#define USE_HEIGHT HW_LCD_HEIGHT
+  const int y_offset = 0;
+#else
+#define USE_HEIGHT 180
+  const int y_offset = (240 - USE_HEIGHT)/2;
+#endif
 
-
-  resizePixels(I_VideoBuffer, fullscreen_buffer, 320, 200, HW_LCD_WIDTH, 180);
-
+  resizePixels(I_VideoBuffer, fullscreen_buffer, 320, 200, HW_LCD_WIDTH, USE_HEIGHT);
 
   uint16_t *p_buf = lcdGetFrameBuffer();
 
-
-  for (y = 0; y < 180; y++)
+  for (y = 0; y < USE_HEIGHT; y++)
   {
     for (x = 0; x < HW_LCD_WIDTH; x++)
     {

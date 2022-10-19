@@ -382,7 +382,7 @@ static boolean I_SDL_InitSound(boolean _use_sfx_prefix)
     }
 
 // TODO chcbaram
-#if 1
+#if 0
     //speakerEnable();
     //speakerStart(11025);
     i2sSetSampleRate(11025);

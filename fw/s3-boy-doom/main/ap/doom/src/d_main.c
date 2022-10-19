@@ -1874,6 +1874,7 @@ void D_DoomMain (void)
     // Moved this here so that MAP01 isn't constantly looked up
     // in the main loop.
 
+    DEH_printf("ST_Init: post Init status bar.\n");
     if (gamemode == commercial && W_CheckNumForName("map01") < 0)
         storedemo = true;
 

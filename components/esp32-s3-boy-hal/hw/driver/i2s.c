@@ -111,8 +111,8 @@ void i2sThread(void *args)
       {
         logPrintf("i2s_channel_write fail\n");
       } 
-      is_sent = true;
 #endif
+      is_sent = true;
     }
     else
     {
@@ -286,6 +286,7 @@ bool i2sPlayBeep(uint32_t freq_hz, uint16_t volume, uint32_t time_ms)
   pre_time = millis();
   while(millis()-pre_time <= time_ms)
   {
+#if 0
     if (i2sAvailableForWrite(mix_ch) >= num_samples)
     {
       for (int i=0; i<num_samples; i++)
@@ -296,6 +297,7 @@ bool i2sPlayBeep(uint32_t freq_hz, uint16_t volume, uint32_t time_ms)
       }
       i2sWrite(mix_ch, sample, num_samples);
     }
+#endif
     delay(2);
   }
 

@@ -20,6 +20,7 @@ set(requires
   "nvs_flash"
   "esp_adc"
   "app_update"
+  "driver"
   )
 
 
