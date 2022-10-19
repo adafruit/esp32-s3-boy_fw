@@ -4,3 +4,6 @@
 [submodule "components/squashfs/lib/zlib"]
 	path = components/squashfs/lib/zlib
 	url = https://github.com/madler/zlib
+[submodule "esp-idf"]
+	path = esp-idf
+	url = https://github.com/espressif/esp-idf
