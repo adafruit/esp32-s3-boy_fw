@@ -1,3 +1,4 @@
 /fw/*/build
 /fw/*/sdkconfig.old
 /assets/doom.squashfs
+/assets/s3-boy-doom-combined.bin

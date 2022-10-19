@@ -7,3 +7,6 @@
 [submodule "esp-idf"]
 	path = esp-idf
 	url = https://github.com/espressif/esp-idf
+[submodule "components/squashfs/lib/lz4"]
+	path = components/squashfs/lib/lz4
+	url = https://github.com/lz4/lz4
