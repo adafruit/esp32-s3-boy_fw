@@ -14,7 +14,7 @@ concurrency:
 
 jobs:
   test:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
 
     steps:
     - name: Dump GitHub context
@@ -25,6 +25,8 @@ jobs:
       with:
         submodules: true
         fetch-depth: 1
+    - name: install mksquashfs
+      run: sudo apt-get update && sudo apt-get install squashfs-tools
     - name: esp-idf setup/install
       run: esp-idf/install.sh
     - name: build DOOM
