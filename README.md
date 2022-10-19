@@ -1,27 +1,7 @@
 # esp32-s3-boy_fw
 
-## windows powershell
-```
-powershell -noexit -executionpolicy bypass -File  C:\Espressif\frameworks\esp-idf-master\export.ps1
-```
+This hacked up version is for the Feather ESP32-S3-TFT and only works
+well enough to play a demo on the LCD, with visual glitchiness.
 
-## set-target
-```
-idf.py set-target esp32s3
-```
-
-
-## build
-```
-idf.py build
-```
-
-## flash
-```
-idf.py -p com1 flash
-```
-
-## debug
-```
- ~/.espressif/tools/openocd-esp32/v0.11.0-esp32-20220706/openocd-esp32/bin/openocd -f board/esp32s3-builtin.cfg
-```
+ 1. Grab the artifact from the releases page
+ 2. Flash it at offset 0 with esptool.py or web esptool

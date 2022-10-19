@@ -29,7 +29,7 @@ jobs:
       run: esp-idf/install.sh
     - name: build DOOM
       run: |
-        . esp-idf/export.sh && cd fw/s3-boy-doom && idf.py set-target esp32c3 && idf.py build && cd build && esptool.py --chip esp32s3 merge_bin -t 0 --output s3-boy-doom-combined.bin `tail -n +2 flash_args`
+        make
     - uses: actions/upload-artifact@v3
       with:
         name: s3-boy-doom-combined
