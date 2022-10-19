@@ -34,3 +34,10 @@ jobs:
       with:
         name: s3-boy-doom-combined
         path: fw/s3-boy-doom/build/s3-boy-doom-combined.bin
+    - name: Create release
+      if: startsWith(github.ref, 'refs/tags/')
+      uses: softprops/action-gh-release@v1
+      with:
+        files: fw/s3-boy-doom/build/s3-boy-doom-combined.bin
+        fail_on_unmatched_files: true
+        body: "Grab the file below and flash at offset 0 with esptool.py or web esptool"
