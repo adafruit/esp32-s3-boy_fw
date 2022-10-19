@@ -18,6 +18,8 @@
 
 #include <string.h>
 
+#include "esp_system.h"
+
 #include "doomtype.h"
 #include "i_system.h"
 #include "m_argv.h"
@@ -251,6 +253,7 @@ Z_Malloc
   int		tag,
   void*		user )
 {
+    int fuel = 10000;
     int		extra;
     memblock_t*	start;
     memblock_t* rover;
@@ -293,6 +296,9 @@ Z_Malloc
                 // hit a block that can't be purged,
                 // so move base past it
                 base = rover = rover->next;
+                if(fuel-- == 0) {
+                    esp_restart();
+                }
             }
             else
             {

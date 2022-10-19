@@ -429,6 +429,7 @@ static int Clamp(int x)
 
 void S_StartSound(void *origin_p, int sfx_id)
 {
+    return;
     sfxinfo_t *sfx;
     mobj_t *origin;
     int rc;
@@ -557,6 +558,7 @@ void S_ResumeSound(void)
 
 void S_UpdateSounds(mobj_t *listener)
 {
+    return;
     int                audible;
     int                cnum;
     int                volume;
@@ -654,6 +656,7 @@ void S_StartMusic(int m_id)
 
 void S_ChangeMusic(int musicnum, int looping)
 {
+    return;
     musicinfo_t *music = NULL;
     char namebuf[9];
     void *handle;

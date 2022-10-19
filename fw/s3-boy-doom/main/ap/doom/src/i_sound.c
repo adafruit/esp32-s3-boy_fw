@@ -35,7 +35,7 @@
 
 // Sound sample rate to use for digital output (Hz)
 
-int snd_samplerate = 44100;
+int snd_samplerate = 8000;
 
 // Maximum number of bytes to dedicate to allocated sound effects.
 // (Default: 64MB)
@@ -140,6 +140,8 @@ static void InitSfxModule(boolean use_sfx_prefix)
 
     sound_module = NULL;
 
+    return;
+
     for (i=0; sound_modules[i] != NULL; ++i)
     {
         // Is the sfx device in the list of devices supported by
@@ -167,6 +169,7 @@ static void InitMusicModule(void)
     int i;
 
     music_module = NULL;
+    return;
 
     for (i=0; music_modules[i] != NULL; ++i)
     {
@@ -204,7 +207,7 @@ void I_InitSound(boolean use_sfx_prefix)
     // Disable all sound output.
     //
 
-    nosound = M_CheckParm("-nosound") > 0;
+    nosound = 1; // M_CheckParm("-nosound") > 0;
 
     //!
     // @vanilla
