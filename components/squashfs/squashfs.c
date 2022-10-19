@@ -14,6 +14,11 @@
 static sqfs fs;
 static _lock_t lock;
 
+typedef struct {
+    DIR base;
+    SQUASH_DIR *real_dir;
+} SQ_DIR_WRAP;
+
 #define RETURN_ERROR(err) do { _lock_release(&lock); errno = err; return -1; } while(0)
 #define RETURN_ERRNO() do { _lock_release(&lock); return -1; } while(0)
 #define RETURN_ERRNO_NULL() do { _lock_release(&lock); return NULL; } while(0)
@@ -79,8 +84,11 @@ static void squash_fs_seekdir(DIR *pdir, long offset) {
 }
 
 static int squash_fs_closedir(DIR *pdir) {
+    if(!pdir) { errno = -EINVAL; return -1; }
     _lock_acquire(&lock);
-    int res = squash_closedir((SQUASH_DIR*)pdir);
+    SQ_DIR_WRAP *wrap_dir = (SQ_DIR_WRAP*) pdir;
+    int res = squash_closedir(wrap_dir->real_dir);
+    free(wrap_dir);
     RETURN_RES();
 }
 
@@ -88,14 +96,19 @@ static DIR *squash_fs_opendir(const char *name) {
     _lock_acquire(&lock);
     printf("squash_fs_opendir %s\n", name);
     DIR *res = (DIR*)squash_opendir(&fs, name);
-    printf("squash_fs_res=%p\n", res);
-    RETURN_PTR();
+    if (!res) { RETURN_PTR(); }
+
+    SQ_DIR_WRAP *wrap_dir = malloc(sizeof(SQ_DIR_WRAP));
+    wrap_dir->real_dir = res;
+    printf("squash_fs_res=%p / %p\n", wrap_dir, res);
+    RETURN_ARG((DIR*)wrap_dir);
 }
 
 static struct dirent *squash_fs_readdir(DIR *pdir) {
     _lock_acquire(&lock);
-    printf("squash_fs_readdir\n");
-    struct dirent *res = squash_readdir((SQUASH_DIR*)pdir);
+    printf("squash_fs_readdir %p\n", pdir);
+    SQ_DIR_WRAP *wrap_dir = (SQ_DIR_WRAP*) pdir;
+    struct dirent *res = squash_readdir(wrap_dir->real_dir);
     printf("squash_fs_res=%p\n", res);
     RETURN_PTR();
 }
