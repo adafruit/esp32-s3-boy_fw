@@ -1,2 +1,3 @@
 /fw/*/build
 /fw/*/sdkconfig.old
+/assets/doom.squashfs
