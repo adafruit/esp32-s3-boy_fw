@@ -32,9 +32,7 @@
 
 static sqfs_err sqfs_decompressor_lz4(void *in, size_t insz,
 		void *out, size_t *outsz) {
-        printf("decompress_safe(%p, %zd, %p, %zd)\n", in, insz, out, *outsz);
 	int zout = LZ4_decompress_safe(in, out, (int)insz, (int)*outsz);
-        printf("->%d", zout);
 	if (zout < 0)
 		return SQFS_ERR;
 	*outsz = zout;
@@ -42,7 +40,6 @@ static sqfs_err sqfs_decompressor_lz4(void *in, size_t insz,
 }
 
 sqfs_decompressor sqfs_decompressor_get(sqfs_compression_type type) {
-        printf("decompressor_get type=%d\n", type);
 	assert(SQFS_COMP_LZ4 == type);
 	return &sqfs_decompressor_lz4;
 }
