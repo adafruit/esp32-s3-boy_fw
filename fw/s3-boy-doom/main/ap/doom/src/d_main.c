@@ -636,7 +636,7 @@ void D_StartTitle (void)
 // These are from the original source: some of them are perhaps
 // not used in any dehacked patches
 
-static char *banners[] =
+static const char *banners[] =
 {
     // doom2.wad
     "                         "
@@ -707,12 +707,12 @@ static char *GetGameName(char *gamename)
             M_snprintf(gamename, gamename_size, deh_sub,
                        version / 100, version % 100);
 
-            while (gamename[0] != '\0' && isspace(gamename[0]))
+            while (gamename[0] != '\0' && isspace((unsigned char)gamename[0]))
             {
                 memmove(gamename, gamename + 1, gamename_size - 1);
             }
 
-            while (gamename[0] != '\0' && isspace(gamename[strlen(gamename)-1]))
+            while (gamename[0] != '\0' && isspace((unsigned char)gamename[strlen(gamename)-1]))
             {
                 gamename[strlen(gamename) - 1] = '\0';
             }
@@ -729,7 +729,7 @@ static void SetMissionForPackName(char *pack_name)
     int i;
     static const struct
     {
-        char *name;
+        const char *name;
         int mission;
     } packs[] = {
         { "doom2",    doom2 },

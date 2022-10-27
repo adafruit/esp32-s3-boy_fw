@@ -84,7 +84,7 @@ static uint32_t pixel_format;
 static SDL_Color palette[256];
 static boolean palette_to_set;
 #else
-static char *window_title = "";
+static const char *window_title = "";
 #endif
 
 
@@ -134,11 +134,11 @@ int png_screenshots = 0;
 
 // SDL video driver name
 
-char *video_driver = "";
+const char *video_driver = "";
 
 // Window position:
 
-char *window_position = "center";
+const char *window_position = "center";
 
 // SDL display number on which to run.
 

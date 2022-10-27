@@ -133,7 +133,7 @@ static boolean IsWhitespace(char *s)
 {
     for (; *s; ++s)
     {
-        if (!isspace(*s))
+        if (!isspace((unsigned char)*s))
             return false;
     }
 
@@ -148,14 +148,14 @@ static char *CleanString(char *s)
 
     // Leading whitespace
 
-    while (*s && isspace(*s))
+    while (*s && isspace((unsigned char)*s))
         ++s;
 
     // Trailing whitespace
    
     strending = s + strlen(s) - 1;
 
-    while (strlen(s) > 0 && isspace(*strending))
+    while (strlen(s) > 0 && isspace((unsigned char)*strending))
     {
         *strending = '\0';
         --strending;
@@ -310,7 +310,7 @@ static void DEH_ParseContext(deh_context_t *context)
             return;
         }
 
-        while (line[0] != '\0' && isspace(line[0]))
+        while (line[0] != '\0' && isspace((unsigned char)line[0]))
             ++line;
 
         if (line[0] == '#')
@@ -463,7 +463,7 @@ int DEH_LoadLumpByName(char *name, boolean allow_long, boolean allow_error)
 // Check the command line for -deh argument, and others.
 void DEH_ParseCommandLine(void)
 {
-    char *filename;
+    const char *filename;
     int p;
 
     //!

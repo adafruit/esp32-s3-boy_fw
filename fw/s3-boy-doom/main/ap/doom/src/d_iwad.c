@@ -57,10 +57,10 @@ static const iwad_t iwads[] =
 #define MAX_IWAD_DIRS 128
 
 static boolean iwad_dirs_built = false;
-static EXT_RAM_BSS_ATTR char *iwad_dirs[MAX_IWAD_DIRS];
+static EXT_RAM_BSS_ATTR const char *iwad_dirs[MAX_IWAD_DIRS];
 static int num_iwad_dirs = 0;
 
-static void AddIWADDir(char *dir)
+static void AddIWADDir(const char *dir)
 {
     if (num_iwad_dirs < MAX_IWAD_DIRS)
     {
@@ -504,7 +504,7 @@ static char *CheckDirectoryHasIWAD(const char *dir, const char *iwadname)
 // Search a directory to try to find an IWAD
 // Returns the location of the IWAD if found, otherwise NULL.
 
-static char *SearchDirectoryForIWAD(char *dir, int mask, GameMission_t *mission)
+static char *SearchDirectoryForIWAD(const char *dir, int mask, GameMission_t *mission)
 {
     char *filename;
     size_t i;
@@ -532,7 +532,7 @@ static char *SearchDirectoryForIWAD(char *dir, int mask, GameMission_t *mission)
 // When given an IWAD with the '-iwad' parameter,
 // attempt to identify it by its name.
 
-static GameMission_t IdentifyIWADByName(char *name, int mask)
+static GameMission_t IdentifyIWADByName(const char *name, int mask)
 {
     size_t i;
     GameMission_t mission;
@@ -568,14 +568,15 @@ static GameMission_t IdentifyIWADByName(char *name, int mask)
     return mission;
 }
 
+#if 0
 // Add IWAD directories parsed from splitting a path string containing
 // paths separated by PATH_SEPARATOR. 'suffix' is a string to concatenate
 // to the end of the paths before adding them.
-static void AddIWADPath(char *path, char *suffix)
+static void AddIWADPath(const char *path_in, const char *suffix)
 {
     char *left, *p;
 
-    path = M_StringDuplicate(path);
+    char *path = M_StringDuplicate(path_in);
 
     // Split into individual dirs within the list.
     left = path;
@@ -602,8 +603,9 @@ static void AddIWADPath(char *path, char *suffix)
 
     memFree(path);
 }
-
+#endif
 #ifndef _WIN32
+#ifdef ORIGCODE
 // Add standard directories where IWADs are located on Unix systems.
 // To respect the freedesktop.org specification we support overriding
 // using standard environment variables. See the XDG Base Directory
@@ -611,7 +613,7 @@ static void AddIWADPath(char *path, char *suffix)
 // <http://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html>
 static void AddXdgDirs(void)
 {
-    char *env, *tmp_env;
+    const char *env, *tmp_env;
 
     // Quote:
     // > $XDG_DATA_HOME defines the base directory relative to which
@@ -623,7 +625,7 @@ static void AddXdgDirs(void)
 
     if (env == NULL)
     {
-        char *homedir = getenv("HOME");
+        const char *homedir = getenv("HOME");
         if (homedir == NULL)
         {
             homedir = "/";
@@ -637,7 +639,7 @@ static void AddXdgDirs(void)
     // ~/.local/share/games/doom) as a user-writeable extension to
     // the usual /usr/share/games/doom location.
     AddIWADDir(M_StringJoin(env, "/games/doom", NULL));
-    memFree(tmp_env);
+    memFree((void*)tmp_env);
 
     // Quote:
     // > $XDG_DATA_DIRS defines the preference-ordered set of base
@@ -664,6 +666,7 @@ static void AddXdgDirs(void)
     // Classic WADs.
     AddIWADPath(env, "/games/doom3bfg/base/wads");
 }
+#endif
 #endif
 
 //
@@ -730,7 +733,7 @@ static void BuildIWADDirList(void)
 // Searches WAD search paths for an WAD with a specific filename.
 // 
 
-char *D_FindWADByName(const char *name)
+const char *D_FindWADByName(const char *name)
 {
     char *path;
     char *probe;
@@ -784,9 +787,9 @@ char *D_FindWADByName(const char *name)
 // if not found.
 //
 
-char *D_TryFindWADByName(char *filename)
+const char *D_TryFindWADByName(const char *filename)
 {
-    char *result;
+    const char *result;
 
     result = D_FindWADByName(filename);
 
@@ -807,10 +810,10 @@ char *D_TryFindWADByName(char *filename)
 // should be executed (notably loading PWADs).
 //
 
-char *D_FindIWAD(int mask, GameMission_t *mission)
+const char *D_FindIWAD(int mask, GameMission_t *mission)
 {
-    char *result = NULL;
-    char *iwadfile = NULL;
+    const char *result = NULL;
+    const char *iwadfile = NULL;
     int iwadparm;
     int i;
 
@@ -862,7 +865,7 @@ const iwad_t **D_FindAllIWADs(int mask)
 {
     const iwad_t **result;
     int result_len;
-    char *filename;
+    const char *filename;
     int i;
 
     result = memMalloc(sizeof(iwad_t *) * (arrlen(iwads) + 1));
@@ -897,7 +900,7 @@ const iwad_t **D_FindAllIWADs(int mask)
 // Get the IWAD name used for savegames.
 //
 
-char *D_SaveGameIWADName(GameMission_t gamemission)
+const char *D_SaveGameIWADName(GameMission_t gamemission)
 {
     size_t i;
 
@@ -921,7 +924,7 @@ char *D_SaveGameIWADName(GameMission_t gamemission)
     return "unknown.wad";
 }
 
-char *D_SuggestIWADName(GameMission_t mission, GameMode_t mode)
+const char *D_SuggestIWADName(GameMission_t mission, GameMode_t mode)
 {
     int i;
 
@@ -936,7 +939,7 @@ char *D_SuggestIWADName(GameMission_t mission, GameMode_t mode)
     return "unknown.wad";
 }
 
-char *D_SuggestGameName(GameMission_t mission, GameMode_t mode)
+const char *D_SuggestGameName(GameMission_t mission, GameMode_t mode)
 {
     int i;
 

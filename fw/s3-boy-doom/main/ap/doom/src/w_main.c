@@ -49,7 +49,7 @@ boolean W_ParseCommandLine(void)
     {
         for (p = p + 1; p<myargc && myargv[p][0] != '-'; ++p)
         {
-            char *filename;
+            const char *filename;
 
             modifiedgame = true;
 
@@ -77,7 +77,7 @@ boolean W_ParseCommandLine(void)
     {
         for (p = p + 1; p<myargc && myargv[p][0] != '-'; ++p)
         {
-            char *filename;
+            const char *filename;
 
             modifiedgame = true;
 
@@ -104,7 +104,7 @@ boolean W_ParseCommandLine(void)
     {
         for (p = p + 1; p<myargc && myargv[p][0] != '-'; ++p)
         {
-            char *filename;
+            const char *filename;
 
             modifiedgame = true;
 
@@ -129,7 +129,7 @@ boolean W_ParseCommandLine(void)
     {
         for (p = p + 1; p<myargc && myargv[p][0] != '-'; ++p)
         {
-            char *filename;
+            const char *filename;
 
             modifiedgame = true;
             filename = D_TryFindWADByName(myargv[p]);
@@ -152,7 +152,7 @@ boolean W_ParseCommandLine(void)
     {
         for (p = p + 1; p<myargc && myargv[p][0] != '-'; ++p)
         {
-            char *filename;
+            const char *filename;
 
             modifiedgame = true;
 
@@ -178,7 +178,7 @@ boolean W_ParseCommandLine(void)
 	modifiedgame = true;            // homebrew levels
 	while (++p != myargc && myargv[p][0] != '-')
         {
-            char *filename;
+            const char *filename;
 
             filename = D_TryFindWADByName(myargv[p]);
 
