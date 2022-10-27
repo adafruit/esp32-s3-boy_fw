@@ -30,8 +30,7 @@ jobs:
     - name: esp-idf setup/install
       run: esp-idf/install.sh
     - name: build DOOM
-      run: |
-        make
+      run: . esp-idf/export.sh; make
     - uses: actions/upload-artifact@v3
       with:
         name: s3-boy-doom-combined
