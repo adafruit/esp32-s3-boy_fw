@@ -95,10 +95,6 @@ static int snd_mport = 0;
 
 static sound_module_t *sound_modules[] = 
 {
-    &sound_sdl_module,
-#ifdef FEATURE_SOUND
-    &sound_pcsound_module,
-#endif
     NULL,
 };
 
@@ -106,10 +102,6 @@ static sound_module_t *sound_modules[] =
 
 static music_module_t *music_modules[] =
 {
-#ifdef FEATURE_SOUND
-    &music_sdl_module,
-    &music_opl_module,
-#endif
     NULL,
 };
 

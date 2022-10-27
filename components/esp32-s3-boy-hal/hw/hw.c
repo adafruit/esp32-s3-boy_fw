@@ -41,47 +41,45 @@ bool hwInit(void)
   logPrintf("\n");
 
   nvsInit();
+#if _USE_HW_ADC
   adcInit();
+#endif
 #if _USE_HW_BUTTON
   buttonInit();
 #endif
-  printf("%s:%d\n", __FILE__, __LINE__);
 
+#if _USE_HW_BATTERY
   batteryInit();
-  printf("%s:%d\n", __FILE__, __LINE__);
+#endif
+#if _USE_HW_I2S
   i2sInit();
-  printf("%s:%d\n", __FILE__, __LINE__);
+#endif
+#if _USE_HW_AUDIO
   audioInit();
-  printf("%s:%d\n", __FILE__, __LINE__);
+#endif
+#if _USE_HW_BUZZER
   buzzerInit();
-  printf("%s:%d\n", __FILE__, __LINE__);
+#endif
   
   lcdInit();
-  printf("%s:%d\n", __FILE__, __LINE__);
   // sdInit();
-  printf("%s:%d\n", __FILE__, __LINE__);
   fatfsInit();
-  printf("%s:%d\n", __FILE__, __LINE__);
+#if _USE_HW_YMODEM
   ymodemInit();
-  printf("%s:%d\n", __FILE__, __LINE__);
-
+#endif
 
   esp_partition_iterator_t it;
 
   it = esp_partition_find(ESP_PARTITION_TYPE_APP, ESP_PARTITION_SUBTYPE_ANY, "launcher");
-  printf("%s:%d\n", __FILE__, __LINE__);
   if (it != NULL)
   {
-  printf("%s:%d\n", __FILE__, __LINE__);
     const esp_partition_t *part = esp_partition_get(it);
 
     if (part != esp_ota_get_running_partition())
     {
-  printf("%s:%d\n", __FILE__, __LINE__);
       esp_ota_set_boot_partition(part);
     }
   }
-  printf("%s:%d\n", __FILE__, __LINE__);
 
   return true;
 }

@@ -39,10 +39,10 @@
 #undef _USE_HW_SD
 #define _USE_HW_FATFS
 #define _USE_HW_NVS
-#define _USE_HW_BATTERY
-#define _USE_HW_I2S
-#define _USE_HW_BUZZER
-#define _USE_HW_YMODEM
+#undef _USE_HW_BATTERY
+#undef _USE_HW_I2S
+#undef _USE_HW_BUZZER
+#undef _USE_HW_YMODEM
 
 
 #define _USE_HW_LED
@@ -76,17 +76,17 @@
 #define _USE_HW_PWM
 #define      HW_PWM_MAX_CH          1
 
-#define _USE_HW_ADC                 
+#undef _USE_HW_ADC                 
 #define      HW_ADC_MAX_CH          1
 
 #undef _USE_HW_BUTTON
 #define      HW_BUTTON_MAX_CH       1
 
-#define _USE_HW_MIXER
+#undef _USE_HW_MIXER
 #define      HW_MIXER_MAX_CH        8
 #define      HW_MIXER_MAX_BUF_LEN   (16*4*8)
 
-#define _USE_HW_AUDIO
+#undef _USE_HW_AUDIO
 #define      HW_AUDIO_CMD_MAX_CH    4
 
 
