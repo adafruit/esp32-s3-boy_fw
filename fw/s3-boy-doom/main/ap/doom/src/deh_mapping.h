@@ -45,7 +45,7 @@
              {deh_name, NULL, -1, false},
 
 #define DEH_END_MAPPING                                       \
-             {NULL, NULL, -1}                                 \
+             {NULL, NULL, -1, false}                          \
         }                                                     \
     };
 
@@ -60,7 +60,7 @@ struct deh_mapping_entry_s
 {
     // field name
    
-    char *name;
+    const char *name;
 
     // location relative to the base in the deh_mapping_t struct
     // If this is NULL, it is an unsupported mapping
