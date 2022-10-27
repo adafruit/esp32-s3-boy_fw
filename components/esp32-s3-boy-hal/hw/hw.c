@@ -42,7 +42,9 @@ bool hwInit(void)
 
   nvsInit();
   adcInit();
+#if _USE_HW_BUTTON
   buttonInit();
+#endif
   printf("%s:%d\n", __FILE__, __LINE__);
 
   batteryInit();

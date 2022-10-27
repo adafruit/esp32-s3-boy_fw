@@ -41,7 +41,11 @@ uint32_t buttonGetRepeatEvent(uint8_t ch);
 uint32_t buttonGetRepeatCount(uint8_t ch);
 
 const char *buttonGetName(uint8_t ch);
-
+#else
+#define buttonGetPressedEvent(x) false
+#define buttonGetPressed(x) false
+#define buttonClear() ((void)0)
+#define buttonInit() false
 #endif
 
 #ifdef __cplusplus

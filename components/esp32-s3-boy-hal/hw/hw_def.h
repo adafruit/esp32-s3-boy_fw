@@ -79,8 +79,8 @@
 #define _USE_HW_ADC                 
 #define      HW_ADC_MAX_CH          1
 
-#define _USE_HW_BUTTON
-#define      HW_BUTTON_MAX_CH       11
+#undef _USE_HW_BUTTON
+#define      HW_BUTTON_MAX_CH       1
 
 #define _USE_HW_MIXER
 #define      HW_MIXER_MAX_CH        8
