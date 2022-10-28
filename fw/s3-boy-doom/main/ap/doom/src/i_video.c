@@ -888,7 +888,6 @@ static void drawScreenNormal(void)
 
 static void drawScreenFull(void)
 {
-  int x, y;
   byte index;
   uint16_t rgb565;
 
@@ -897,28 +896,17 @@ static void drawScreenFull(void)
     return;
   }
 
-  int x_offset;
-  int y_offset;
-
-  x_offset = 0;
-  y_offset = 0;
-
-
   resizePixels(I_VideoBuffer, fullscreen_buffer, 320, 200, HW_LCD_WIDTH, HW_LCD_HEIGHT);
 
 
   uint16_t *p_buf = lcdGetFrameBuffer();
 
 
-  for (y = 0; y < HW_LCD_HEIGHT; y++)
-  {
-    for (x = 0; x < HW_LCD_WIDTH; x++)
-    {
-      index  = fullscreen_buffer[y * HW_LCD_WIDTH + x];
-      rgb565 = rgb565_palette[index];
+  for (int i = 0; i < HW_LCD_HEIGHT * HW_LCD_WIDTH; i++) {
+    index  = fullscreen_buffer[i];
+    rgb565 = rgb565_palette[index];
 
-      p_buf[(y+y_offset) * HW_LCD_WIDTH + x] = rgb565;
-    }
+    p_buf[i] = rgb565;
   }
   lcdRequestDraw();
 }
