@@ -60,8 +60,8 @@ static void (*frameCallBack)(void) = NULL;
 volatile static bool  is_write_frame = false;
 static cb_data_t cb_data;
 
-const uint32_t colstart = 40;
-const uint32_t rowstart = 53;
+const uint32_t colstart = (320 - HW_LCD_WIDTH)/2;
+const uint32_t rowstart = (240 - HW_LCD_HEIGHT)/2;
 
 
 
