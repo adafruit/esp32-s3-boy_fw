@@ -160,7 +160,7 @@ static int max_scaling_buffer_pixels = 16000000;
 
 // Run in full screen mode?  (int type for config code)
 
-int fullscreen = false;
+int fullscreen = true;
 
 // Aspect ratio correction mode
 
