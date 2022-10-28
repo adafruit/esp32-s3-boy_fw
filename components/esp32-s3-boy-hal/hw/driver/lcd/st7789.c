@@ -288,20 +288,6 @@ void st7789InitRegs(void)
   writecommand(ST7789_COLMOD);  // 15: set color mode, 1 arg, no delay:
   writedata(0x05);              //     16-bit color
 
-
-  writecommand(ST7789_CASET);   //  1: Column addr set, 4 args, no delay:
-  writedata(0x00);
-  writedata(0x00);              //     XSTART = 0
-  writedata(0x00);
-  writedata(HW_LCD_WIDTH-1);    //     XEND = 
-
-  writecommand(ST7789_RASET);   //  2: Row addr set, 4 args, no delay:
-  writedata(0x00);
-  writedata(0x00);              //     XSTART = 0
-  writedata(0x00);
-  writedata(HW_LCD_HEIGHT-1);   //     XEND = 
-
-
   writecommand(ST7789_NORON);   //  3: Normal display on, no args, w/delay
   delay(10);
   writecommand(ST7789_DISPON);  //  4: Main screen turn on, no args w/delay
