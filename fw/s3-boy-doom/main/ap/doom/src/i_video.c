@@ -817,29 +817,33 @@ static void drawScreenNormal(void)
     return;
   }
 
-  _Static_assert(HW_LCD_WIDTH == 240);
-  const int x_offset = 0;
 
-#if HW_LCD_HEIGHT < 180
-#define USE_HEIGHT HW_LCD_HEIGHT
-  const int y_offset = 0;
+  // vga mode 13h did not have square pixels, since it was displayed
+  // on a 4:3 screen.  Use 320x240 as the basis for calculating our scaling factors
+#if HW_LCD_WIDTH * 240 < HW_LCD_HEIGHT * 320
+  // LCD is relatively wider than native screen, display will be letterboxed
+  const int use_height = LCD_WIDTH * 240 / 320;
+  const int use_width = LCD_WIDTH;
 #else
-#define USE_HEIGHT 180
-  const int y_offset = (240 - USE_HEIGHT)/2;
+  const int use_width = LCD_HEIGHT * 320 / 240;
+  const int use_height = LCD_HEIGHT;
+  // LCD is relatively taller than native screen, display will be pillarboxed
 #endif
+  const int x_offset = (LCD_WIDTH - use_width) / 2;
+  const int y_offset = (LCD_HEIGHT - use_height) / 2;
 
-  resizePixels(I_VideoBuffer, fullscreen_buffer, 320, 200, HW_LCD_WIDTH, USE_HEIGHT);
+  resizePixels(I_VideoBuffer, fullscreen_buffer, 320, 200, use_width, use_height);
 
   uint16_t *p_buf = lcdGetFrameBuffer();
 
-  for (y = 0; y < USE_HEIGHT; y++)
+  for (y = 0; y < use_height; y++)
   {
-    for (x = 0; x < HW_LCD_WIDTH; x++)
+    for (x = 0; x < use_width; x++)
     {
-      index  = fullscreen_buffer[y * HW_LCD_WIDTH + x];
+      index  = fullscreen_buffer[y * use_width + x];
       rgb565 = rgb565_palette[index];
 
-      p_buf[(y+y_offset) * HW_LCD_WIDTH + x] = rgb565;
+      p_buf[(y+y_offset) * LCD_WIDTH + x + x_offset] = rgb565;
     }
   }
   lcdRequestDraw();
