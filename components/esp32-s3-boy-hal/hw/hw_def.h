@@ -70,8 +70,8 @@
 #define      HW_LCD_LVGL            1
 #define      HW_LCD_LOGO            1
 #define _USE_HW_ST7789
-#define      HW_LCD_WIDTH           240
-#define      HW_LCD_HEIGHT          135
+#define      HW_LCD_WIDTH           280
+#define      HW_LCD_HEIGHT          240
 
 #define _USE_HW_PWM
 #define      HW_PWM_MAX_CH          1
@@ -95,7 +95,7 @@
 #define _PIN_GPIO_LCD_DC            1
 #define _PIN_GPIO_LCD_CS            0
 #define _PIN_GPIO_LCD_RST           3
-#define _PIN_GPIO_LCD_PWR           6
+#define _PIN_GPIO_LCD_PWR           4
 
 // Indices within button.c:button_port_tbl[]
 #define _BTN_LEFT                   0   

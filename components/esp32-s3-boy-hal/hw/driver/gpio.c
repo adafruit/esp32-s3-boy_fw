@@ -25,13 +25,13 @@ typedef struct
 
 static const gpio_tbl_t gpio_tbl[GPIO_MAX_CH] =
     {
-      {GPIO_NUM_7 , _DEF_OUTPUT, _DEF_HIGH}, // 0. LCD CS
-      {GPIO_NUM_39, _DEF_OUTPUT, _DEF_LOW }, // 1. LCD DC
-      {GPIO_NUM_45, _DEF_OUTPUT, _DEF_LOW }, // 2. LCD BLK
-      {GPIO_NUM_40, _DEF_OUTPUT, _DEF_HIGH}, // 3. LCD RST
-      {GPIO_NUM_38, _DEF_OUTPUT, _DEF_HIGH }, // 4. SPK MUTE
-      {GPIO_NUM_17, _DEF_INPUT , _DEF_HIGH}, // 5. SDCARD CD
-      {GPIO_NUM_21, _DEF_OUTPUT, _DEF_HIGH}, // 6. LCD PWR
+      // .mosi_io_num = GPIO_NUM_35,                        // Feather ESP32S3 silk: "MOSI"
+      // .sclk_io_num = GPIO_NUM_36,                        // Feather ESP32S3 silk: "SCK"
+      {GPIO_NUM_8 , _DEF_OUTPUT, _DEF_HIGH}, // 0. LCD CS   // Feather ESP32S3 silk: "A5" // must also change in st7789.c
+      {GPIO_NUM_14, _DEF_OUTPUT, _DEF_LOW }, // 1. LCD DC   // Feather ESP32S3 silk: "A4"
+      {GPIO_NUM_15, _DEF_OUTPUT, _DEF_LOW }, // 2. LCD BLK  // Feather ESP32S3 silk: "A3"
+      {GPIO_NUM_16, _DEF_OUTPUT, _DEF_HIGH}, // 3. LCD RST  // Feather ESP32S3 silk: "A2"
+      {GPIO_NUM_17, _DEF_OUTPUT, _DEF_HIGH}, // 4. LCD PWR  // Feather ESP32S3 silk: "A1"
     };
 
 static uint8_t gpio_data[GPIO_MAX_CH];
