@@ -42,6 +42,7 @@ typedef struct
 } cb_data_t;
 
 
+static void st7789FillRect_unchecked(int32_t x, int32_t y, int32_t w, int32_t h, uint32_t color);
 static void writecommand(uint8_t c);
 static void writedata(uint8_t d);
 static void writedata16(uint16_t d);
@@ -192,7 +193,7 @@ bool st7789Reset(void)
 
   st7789SetRotation(0);
 
-  st7789FillRect(0, 0, HW_LCD_WIDTH, HW_LCD_HEIGHT, black);
+  st7789FillRect_unchecked(-16, -16, HW_LCD_WIDTH+32, HW_LCD_HEIGHT+32, black);
 
   if (_PIN_DEF_BLK >= 0) gpioPinWrite(_PIN_DEF_BLK, _DEF_HIGH);
 
@@ -311,24 +312,10 @@ void st7789SetWindow(int32_t x0, int32_t y0, int32_t x1, int32_t y1)
   writecommand(ST7789_RAMWR); // write to RAM
 }
 
-void st7789FillRect(int32_t x, int32_t y, int32_t w, int32_t h, uint32_t color)
-{
-  uint16_t line_buf[w];
-
-  // Clipping
-  if ((x >= _width) || (y >= _height)) return;
-
-  if (x < 0) { w += x; x = 0; }
-  if (y < 0) { h += y; y = 0; }
-
-  if ((x + w) > _width)  w = _width  - x;
-  if ((y + h) > _height) h = _height - y;
-
-  if ((w < 1) || (h < 1)) return;
-
-
+void st7789FillRect_unchecked(int32_t x, int32_t y, int32_t w, int32_t h, uint32_t color) {
   st7789SetWindow(x, y, x + w - 1, y + h - 1);
 
+  uint16_t line_buf[w];
 
   spi_transaction_t trans;
 
@@ -351,6 +338,23 @@ void st7789FillRect(int32_t x, int32_t y, int32_t w, int32_t h, uint32_t color)
   {  
     spi_device_polling_transmit(spi_ch, &trans);   
   }
+}
+
+void st7789FillRect(int32_t x, int32_t y, int32_t w, int32_t h, uint32_t color)
+{
+
+  // Clipping
+  if ((x >= _width) || (y >= _height)) return;
+
+  if (x < 0) { w += x; x = 0; }
+  if (y < 0) { h += y; y = 0; }
+
+  if ((x + w) > _width)  w = _width  - x;
+  if ((y + h) > _height) h = _height - y;
+
+  if ((w < 1) || (h < 1)) return;
+
+  st7789FillRect_unchecked(x, y, w, h, color);
 }
 
 bool st7789SendBuffer(uint8_t *p_data, uint32_t length, uint32_t timeout_ms)
