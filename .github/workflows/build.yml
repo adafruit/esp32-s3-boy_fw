@@ -32,7 +32,7 @@ jobs:
     - name: build DOOM
       run: |
         make
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       with:
         name: s3-boy-doom-combined
         path: fw/s3-boy-doom/build/s3-boy-doom-combined.bin
